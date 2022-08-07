@@ -30,6 +30,7 @@
         login_user: root 
         check_implicit_admin: yes 
         priv: "*.*:ALL,GRANT" 
+    
     - name: Create a new database called Inventory 
       mysqldb: name=inventory state=present login_user=root login_password=mysql 
   
