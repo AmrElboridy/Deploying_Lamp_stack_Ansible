@@ -1,0 +1,38 @@
+---
+- name: Deploying LAMP Stack 
+  hosts: node2 
+  remote user: ansibul 
+  become: yes 
+  
+  tasks: 
+    - name: Installing Apache server 
+      yum: name=httpd state=latest 
+ 
+    - name: Installing MariaDM Server 
+      yum: 
+        name: 
+          - mariadb-server 
+          - mariadb-devel 
+          - mariadb-connectot-odbc 
+          - mariadb-server-utils 
+          - Python3-PyMySQL
+          - php
+        state: latest
+      
+    - name: Start Mariadb server serivce
+      service: name=mariadb state=started 
+    
+    - name: Update MariaDB Server root password 
+      mysql_user: 
+        name: root 
+        host: node3 
+        password: mysql 
+        login_user: root 
+        check_implicit_admin: yes 
+        priv: "*.*:ALL,GRANT" 
+    - name: Create a new database called Inventory 
+      mysqldb: name=inventory state=present login_user=root login_password=mysql 
+  
+    - name: ICopy SQL File
+      copy: src=/source/servers.sql  dest=/tmp/servers.sql
+
