@@ -33,6 +33,18 @@
     - name: Create a new database called Inventory 
       mysqldb: name=inventory state=present login_user=root login_password=mysql 
   
-    - name: ICopy SQL File
+    - name: Copy SQL File
       copy: src=/source/servers.sql  dest=/tmp/servers.sql
-
+    
+    - name: Create Table called servers with data 
+      shell: mysql -u root -pmysql inventory < /tmp/servers.sql 
+    
+    - name: Copy PHP files 
+      copy: src=/source/connection.php dest=/var/www/html/ 
+    
+    - name: copy Index.php file 
+      copy: src=/source/index.php dest=/ver/www/html/ 
+    
+    - name: Restart web service 
+      service: name=httpd state=restarted 
+...
